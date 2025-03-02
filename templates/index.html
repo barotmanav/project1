@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Mental Health Prediction</h2>
+        <textarea id="statement" placeholder="Enter your mental health statement..."></textarea>
+        <button onclick="predict()">Predict</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function predict() {
+            let statement = document.getElementById("statement").value;
+            if (!statement) {
+                alert("Please enter a statement.");
+                return;
+            }
+
+            fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ statement: statement })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = "Prediction: " + data.prediction;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
